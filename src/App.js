@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import './index.css'
 
-/* TODO: FIXA BARA SÅ ATT HÄLSNINGEN BLINKAR. */
 function App() {
   const [name, setName] = useState('')
   const [joke, setJoke] = useState('')
   const [punchline, setPunchline] = useState('')
+  const [greet, setGreet] = useState('')
   const [isGreet, setIsGreet] = useState(false)
   const [isReveal, setIsReveal] = useState(false)
 
@@ -34,15 +34,32 @@ function App() {
 
     setJoke(setup)
     setPunchline(punchline)
+    setGreet(getGreeting())
     setIsGreet(true)
 
   }
 
-  //Funkar!!!
+  const getGreeting = () => {
+    let date = new Date()
+    let hours = date.getHours()
+    let greet
+    
+    if (hours < 12) {
+        greet =  'Good morning'
+    } else if (hours >= 12 && hours <= 17) { 
+        greet = 'Good afternoon'
+    } else if (hours >= 17 && hours <= 24) {
+        greet = 'Good evening'
+    }
+
+    return greet
+  }
+
   useEffect(() => {
     if(isGreet){
     setInterval(() => {
       greeting.current.toggleAttribute('blink')
+      if (greeting.hasAttribute('blink')) greeting.style.setProperty('color', 'blue')
     }, 1000);
   }
   }, [isGreet])
@@ -61,7 +78,7 @@ function App() {
       </form>
       {isGreet ? (
         <div>
-          <div ref={greeting}>Hello {name} !</div>
+          <div ref={greeting}>{greet} {name} !</div>
           <div>{joke}</div>
           <button onClick={() => setIsReveal(!isReveal)}>Punchline</button>
           <div>{isReveal ? punchline : ''}</div>
